@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text File Upload</title>
+</head>
+<body>
+    <h1>Upload a Text File</h1>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" />
+        <input type="submit" value="Upload" />
+    </form>
+    <button id="voiceButton" type="button">Start Voice Input</button>
+
+    <script>
+        window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+
+        const animationInput = document.getElementById('animation');
+        const voiceButton = document.getElementById('voiceButton');
+    
+        voiceButton.addEventListener('click', () => {
+            recognition.start();
+    
+            recognition.onresult = function(event) {
+                const voiceResult = event.results[0][0].transcript;
+                animationInput.value = voiceResult;
+            }
+        });
+    </script>
+   
+</body>
+</html>

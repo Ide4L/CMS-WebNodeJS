@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+          
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 100px auto;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        input[type="color"] {
+            width: 100px;
+        }
+
+        input[type="radio"] {
+            display: inline; /* Make radio buttons inline cds  */
+            margin-right: 10px;
+        }
+
+        button[type="submit"] {
+            background-color: #04AA6D;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .row::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        /* Responsive layout */
+        @media screen and (max-width: 600px) {
+            input[type="text"],
+            select,
+            textarea,
+            input[type="color"],
+            input[type="radio"] {
+                width: 100%;
+                margin-top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form action="/submit" method="post">
+            <div class="form-group">
+                <label for="motorinfo">Motor Info:</label>
+                <input type="text" id="motorinfo" name="motorinfo" required>
+            </div>
+            <div class="form-group">
+                <label for="wheelinfo">Wheel Info:</label>
+                <input type="text" id="wheelinfo" name="wheelinfo" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="materialcolor">Material Color (RGB):</label>
+                <input type="color" id="materialcolor" name="materialcolor" value="#ff0000">
+            </div>
+            <div class "form-group">
+                <label for="doanimation">Animation:</label>
+                <input type="text" id="doanimation" name="doanimation">
+            </div>
+            <div class="form-group">
+                <label for="modelobject">Object:</label>
+                <input type="text" id="modelobject" name="modelobject">
+            </div>
+            
+            <button type="submit">Submit PC for Sale</button>
+            
+            <div class="form-group">
+                <label for="selectId">Select ID:</label>
+                <select id="selectId" name="selectId">
+                    <!-- Dropdown options will be added here dynamically -->
+                </select>
+            </div>
+        </form>
+        
+    </div>
+    <div id="databaseModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Database Rows</h2>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Motor Info</th>
+                    <th>Wheel Info</th>
+                    <th>Material Color</th>
+                    <th>Do Animation</th>
+                    <th>Model Object</th>
+                    <th>Action</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <form id="editForm" style="display:none;">
+        <h2>Edit Row</h2>
+        <div class="form-group">
+            <label for="editMotorInfo">Motor Info:</label>
+            <input type="text" id="editMotorInfo" name="editMotorInfo" required>
+        </div>
+        <div class="form-group">
+            <label for="editWheelInfo">Wheel Info:</label>
+            <input type="text" id="editWheelInfo" name="editWheelInfo" required>
+        </div>
+        <div class="form-group">
+            <label for="editMaterialColor">Material Color (RGB):</label>
+            <input type="color" id="editMaterialColor" name="editMaterialColor">
+        </div>
+        <div class="form-group">
+            <label for="editDoAnimation">Do Animation:</label>
+            <input type="text" id="editDoAnimation" name="editDoAnimation">
+        </div>
+        <div class="form-group">
+            <label for="editModelObject">Model Object:</label>
+            <input type="text" id="editModelObject" name="editModelObject">
+        </div>
+        <div class="form-group">
+            <label for="selectId">Select ID:</label>
+            <select id="selectId" name="selectId">
+                <!-- Dropdown options will be added here dynamically -->
+            </select>
+        </div>
+        
+    </form>
+
+    <script>
+         document.getElementById('showDatabaseButton').addEventListener('click', function () {
+            openModal();
+            fetchDatabaseData();
+            fetchDropdownData(); // Fetch dropdown data when opening the modal
+        });
+
+        function fetchDropdownData() {
+            fetch('/getDropdownData')
+                .then(response => response.json())
+                .then(data => {
+                    const selectId = document.getElementById('selectId');
+
+                    // Clear previous options in the dropdown
+                    selectId.innerHTML = '';
+
+                    // Add a default option
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = '';
+                    defaultOption.textContent = 'Select an ID';
+                    selectId.appendChild(defaultOption);
+
+                    data.forEach(row => {
+                        const option = document.createElement('option');
+                        option.value = row.id;
+                        option.textContent = row.id;
+                        selectId.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching dropdown data:', error);
+                });
+        }
+
+        document.getElementById('showDatabaseButton').addEventListener('click', function () {
+            openModal();
+            fetchDatabaseData();
+        });
+
+        document.getElementById('closeModal').addEventListener('click', function () {
+            closeModal();
+        });
+
+        document.getElementById('updateRowButton').addEventListener('click', function () {
+            updateRow();
+        });
+
+        function openModal() {
+            document.getElementById('databaseModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('databaseModal').style.display = 'none';
+        }
+
+        function editRow(id, motorInfo, wheelInfo, materialColor, doAnimation, modelObject) {
+            document.getElementById('editRowId').value = id; // Store the ID
+
+            // Display the other columns for editing
+            document.getElementById('editMotorInfo').value = motorInfo;
+            document.getElementById('editWheelInfo').value = wheelInfo;
+            document.getElementById('editMaterialColor').value = materialColor;
+            document.getElementById('editDoAnimation').value = doAnimation;
+            document.getElementById('editModelObject').value = modelObject;
+
+            document.getElementById('editForm').style.display = 'block';
+        }
+
+        function fetchDatabaseData() {
+            // Replace this with your server-side code to fetch database data and populate the table and dropdown.
+            // Example: Use fetch('/getdata') to retrieve data.
+        }
+
+        function updateRow() {
+            // Replace this with your server-side code to update a database row based on the form input.
+            // Example: Use fetch('/updateData') to send the updated data to the server.
+        }
+        
+
+    </script>
+</body>
+</html>

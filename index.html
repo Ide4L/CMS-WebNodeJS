@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <title>Construction - Free HTML Bootstrap Template</title>
+        <!-- Mobile Specific Meta -->
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <!-- Custom Fonts -->
+        <link rel="stylesheet" href="custom-font/fonts.css" />
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="css/bootstrap.min.css" />
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="css/font-awesome.min.css" />
+        <!-- Bootsnav -->
+        <link rel="stylesheet" href="css/bootsnav.css">
+        <!-- Fancybox -->
+        <link rel="stylesheet" type="text/css" href="css/jquery.fancybox.css?v=2.1.5" media="screen" />	
+        <!-- Custom stylesheet -->
+        <link rel="stylesheet" href="css/custom.css" />
+        <!--[if lt IE 9]>
+                <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+
+        
+        </section><!-- Why us end -->
+          <!-- Contact form -->
+          <section id="contact_form" >
+            <div class="container">  
+                <div class="row">
+                    <div class="col-md-6 " style="text-align: center;">
+                        <img class="bageri" src="/71qWkSdKNVL-removebg-preview.png" alt="">
+                        <h2 class="second_heading">GO TO AR !!</h2>
+                    </div>
+                    <div class="col-md-6 d-flex justify-content-center" style="margin-top: 50px;">
+                        <form action="/submit" method="post" role="form" class="form-inline text-right col-md-6" >
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="motorinfo" name="motorinfo" required placeholder="Motor Info">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="wheelinfo" name="wheelinfo" placeholder="Wheel Info">
+                            </div>
+                            <div class="form-group">
+                                <input type="color" class="form-control"  id="materialcolor" name="materialcolor" required placeholder="Pick Excavator Color">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="doanimation" name="doanimation" placeholder="Animation"><img id="voiceButton" type="button" class="micc" src="icons8-microphone-100 (1).png" alt="">
+                            </div>
+                           
+                            <div class="form-group">
+                                <input type="text" class="form-control" style="margin-top: -18px"  id="modelobject" name="modelobject" placeholder="Model Link">
+                            </div>
+                            <button type="submit" class="btn submit_btn" style="margin-right: 45px;">Submit</button>
+                            <div id="lastRowData">
+                                <!-- Display last row data here -->
+                                <button id="editButton" type="submit" class="btn submit_btn" style="margin-right: 45px;">Edit</button>
+                            </div>
+                        </form>	
+                    </div>
+                   
+                    <div class="col-md-6 d-flex justify-content-center" style="margin-top: 50px;">
+                        <form id="editForm" style="display: none;" role="form" class="form-inline text-right col-md-6" >
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="editMotorInfo" name="motorinfo" required placeholder="Motor Info">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="editWheelInfo" name="wheelinfo" placeholder="Wheel Info">
+                            </div>
+                            <div class="form-group">
+                                <input type="color" class="form-control" id="editMaterialColor" name="materialcolor" required placeholder="Pick Excavator Color">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="editDoAnimation" name="doanimation" placeholder="Animation">
+                            </div>
+                        
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="editModelObject" name="modelobject" placeholder="Model Link">
+                            </div>
+                            <button type="submit" class="btn submit_btn" style="margin-right: 45px;">Update</button>
+                        </form>	
+                    </div>
+                                
+                </div>
+            </div>
+        </section><!-- Contact form end -->
+        
+      
+    
+        <script>
+             window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+
+        const animationInput = document.getElementById('animation');
+        const voiceButton = document.getElementById('voiceButton');
+    
+        voiceButton.addEventListener('click', () => {
+            recognition.start();
+    
+            recognition.onresult = function(event) {
+                const voiceResult = event.results[0][0].transcript;
+                animationInput.value = voiceResult;
+            }
+        });
+    
+            const editButton = document.getElementById('editButton');
+            const editForm = document.getElementById('editForm');
+            const lastRowData = document.getElementById('lastRowData');
+            const editMotorInfo = document.getElementById('editMotorInfo');
+            const editWheelInfo = document.getElementById('editWheelInfo');
+            const editMaterialColor = document.getElementById('editMaterialColor');
+            const editDoAnimation = document.getElementById('editDoAnimation');
+            const editModelObject = document.getElementById('editModelObject');
+    
+            editButton.addEventListener('click', () => {
+                // Assuming you have a function to fetch the last row data from the server
+                fetch('/getlastdata')
+                    .then(response => response.json())
+                    .then(data => {
+                        // Populate the edit form fields with the last row data
+                        editMotorInfo.value = data.MotorInfo;
+                        editWheelInfo.value = data.WheelInfo;
+                        editMaterialColor.value = data.MaterialColor;
+                        editDoAnimation.value = data.DoAnimation;
+                        editModelObject.value = data.ModelObject;
+    
+                        // Show the edit form and hide the display area
+                        lastRowData.style.display = 'none';
+                        editForm.style.display = 'block';
+                    })
+                    .catch(error => {
+                        console.error('Error fetching last row data:', error.message);
+                    });
+            });
+    
+            editForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+    
+                // Get the updated values from the edit form
+                const updatedMotorInfo = editMotorInfo.value;
+                const updatedWheelInfo = editWheelInfo.value;
+                const updatedMaterialColor = editMaterialColor.value;
+                const updatedDoAnimation = editDoAnimation.value;
+                const updatedModelObject = editModelObject.value;
+    
+                try {
+                    // Send a request to update the last row data in the database
+                    const updateResponse = await fetch('/updateLastRow', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            motorinfo: updatedMotorInfo,
+                            wheelinfo: updatedWheelInfo,
+                            materialcolor: updatedMaterialColor,
+                            doanimation: updatedDoAnimation,
+                            modelobject: updatedModelObject,
+                        }),
+                    });
+    
+                    if (updateResponse.ok) {
+                        // If the update is successful, you might want to refresh the page or update the displayed data
+                        location.reload();
+                    } else {
+                        console.error('Failed to update data in the database');
+                    }
+                } catch (error) {
+                    console.error('Error updating data:', error.message);
+                }
+            });
+        </script>
+    
+    
+        <script src="path_to_your_javascript_file.js"></script>
+        <!-- JavaScript -->
+        <script src="js/jquery-1.12.1.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+
+        <!-- Bootsnav js -->
+        <script src="js/bootsnav.js"></script>
+
+        <!-- JS Implementing Plugins -->
+        <script src="js/isotope.js"></script>
+        <script src="js/isotope-active.js"></script>
+        <script src="js/jquery.fancybox.js?v=2.1.5"></script>
+
+        <script src="js/jquery.scrollUp.min.js"></script>
+
+        <script src="js/main.js"></script>
+
+       
+    </body>	
+</html>	

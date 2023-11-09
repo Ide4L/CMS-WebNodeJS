@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Records</title>
+    <!-- Add your stylesheets here -->
+</head>
+<body>
+    <h1>Database Records</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Motor Info</th>
+                <th>Wheel Info</th>
+                <!-- Add other fields as necessary -->
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% records.forEach(function(record) { %>
+                <tr>
+                    <td><%= record.id %></td>
+                    <td><%= record.MotorInfo %></td>
+                    <td><%= record.WheelInfo %></td>
+                    <!-- Add other fields as necessary -->
+                    <td>
+                        <!-- Use the record's ID to create the link to the edit page -->
+                        <a href="/edit-record?id=<%= record.id %>">Edit</a>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</body>
+</html>

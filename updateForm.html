@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Record Form</title>
+    <!-- Add your stylesheets and JavaScript files here -->
+</head>
+<body>
+    <label for="recordSelect">Select Record:</label>
+    <select id="recordSelect" name="recordId">
+        <!-- Options will be populated here dynamically -->
+    </select>
+
+    <form id="updateForm">
+        <input type="hidden" id="selectedId" name="id">
+        
+        <label for="motorinfo">Motor Info:</label>
+        <input type="text" id="motorinfo" name="motorinfo" placeholder="Enter Motor Info">
+        
+        <label for="wheelinfo">Wheel Info:</label>
+        <input type="text" id="wheelinfo" name="wheelinfo" placeholder="Enter Wheel Info">
+        
+        <!-- Add other input fields as necessary -->
+
+        <button type="submit">Update Record</button>
+    </form>
+</body>
+</html>
+<div class="chooseIdeal form-group">
+    <label class="">Choose Lever Excavator</label>
+    <div class="chooseIdeal input-tab">
+        <input type="radio" name="radio-button" value="love">I love it!<br>
+        <input type="radio" name="radio-button" value="like">I like it<br>
+        <input type="radio" name="radio-button" value="ok">It's ok<br>
+    </div>
+</div>
+
+<script>
+    function displayEditForm(card, data) {
+   console.log('Received data for editing:', data);
+
+   // Set the values of the edit form fields
+   document.getElementById('edit-motorinfo').value = data.motorinfo;
+   document.getElementById('edit-wheelinfo').value = data.wheelinfo;
+   document.getElementById('edit-doanimation').value = data.doanimation;
+
+   // Set the currently edited card
+   currentlyEditedCard = data;
+   console.log('Currently edited card:', currentlyEditedCard);
+
+   // Display the edit form
+   document.getElementById('editFormContainer').style.display = 'block';
+
+  
+}
+
+
+
+
+function saveChanges() {
+   
+       const editedName = document.getElementById('edit-motorinfo').value;
+       const editedDescription = document.getElementById('edit-wheelinfo').value;
+       const editedUrl = document.getElementById('edit-doanimation').value;
+       
+
+       
+
+       // Append form data
+       formData.append('id', currentlyEditedCard.id);
+       formData.append('motorinfo', editedName);
+       formData.append('wheelinfo', editedDescription);
+       formData.append('doanimation', editedUrl);
+
+      
+
+       fetch('http://localhost:5000/updateData', {
+           method: 'POST',
+           body: formData,
+       })
+           .then(response => response.json())
+           .then(updatedData => {
+               console.log('Success:', updatedData);
+
+               // Optionally, handle success or error response from the server
+
+               // Hide the edit form
+               document.getElementById('editFormContainer').style.display = 'none';
+
+               // Reset the currently edited card
+               currentlyEditedCard = null;
+
+               // Update the card on the client side
+               updateCard(updatedData);
+           })
+           .catch((error) => {
+               console.error('Error:', error);
+           });
+   
+}
+
+
+
+function updateCard(updatedData) {
+   const card = document.getElementById(`card-${updatedData.id}`);
+
+   if (card) {
+       card.querySelector('h3').textContent = `Name: ${updatedData.motorinfo}`;
+       card.querySelector('p').textContent = updatedData.wheelinfo;
+
+      
+   }
+}
+
+
+// Fetch and display existing data on page load
+document.addEventListener('DOMContentLoaded', function () {
+   fetch('http://localhost:5000/allData')
+       .then(response => response.json())
+       .then(data => {
+           data.forEach(item => addCard(item));
+       })
+       .catch(error => console.error('Error fetching data:', error));
+});
+</script>

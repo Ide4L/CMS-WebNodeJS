@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Database</title>
+    <style>
+        /* Add your CSS styles here */
+    </style>
+</head>
+<body>
+    <h1>Update Database</h1>
+    <form action="/update" method="post">
+        <div class="form-group">
+            <label for="motorinfo">Updated Motor Info:</label>
+            <input type="text" id="motorinfo" name="motorinfo" required>
+        </div>
+        <div class="form-group">
+            <label for="wheelinfo">Updated Wheel Info:</label>
+            <input type="text" id="wheelinfo" name="wheelinfo" required>
+        </div>
+        <div class="form-group">
+            <label for="color">Updated Material Color (RGB):</label>
+            <input type="color" id="color" name="color">
+        </div>
+        <div class="form-group">
+            <label for="animation">Updated Animation:</label>
+            <input type="text" id="animation" name="animation">
+        </div>
+        <div class="form-group">
+            <label for="object">Updated Object:</label>
+            <input type="text" id="object" name="object">
+        </div>
+        <button type="submit">Update Record</button>
+    </form>
+</body>
+</html>
