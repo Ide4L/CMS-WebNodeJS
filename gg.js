@@ -4,6 +4,9 @@ const mysql = require('mysql');
 const util = require('util');
 const app = express();
 const port = process.env.PORT || 5000;
+const serverless = require('serverless-http');
+const router = express.Router();
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -179,5 +182,7 @@ app.put('/updateLastRow', async (req, res) => {
 });
 
 
+app.use('./functions/api', router);
+module.exports.handler = serverless(app);
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
